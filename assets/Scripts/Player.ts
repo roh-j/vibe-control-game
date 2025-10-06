@@ -1,4 +1,4 @@
-import { _decorator, Animation, Component } from "cc";
+import { _decorator, Animation, Component, Node, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
 const { ccclass, property } = _decorator;
 
@@ -26,6 +26,11 @@ export class Player extends Component {
     // GameManager에서 입력 방향 가져오기
     const direction = GameManager.Instance.inputDirection;
 
+    this.updateAnimation(direction);
+    this.move(direction, deltaTime);
+  }
+
+  private updateAnimation(direction: Vec3) {
     // lengthSqr() → 벡터 길이 제곱 (0 이면 정지, > 0 이면 이동)
     const nextAnim =
       direction.lengthSqr() > 0 ? "player_1_run" : "player_1_idle";
@@ -33,26 +38,34 @@ export class Player extends Component {
     if (this.currentAnim !== nextAnim) {
       this.playAnimation(nextAnim);
     }
+  }
 
-    if (direction.lengthSqr() > 0) {
-      const position = this.node.getWorldPosition();
-
-      // deltaTime 곱해서 프레임 독립적 이동
-      const move = direction.clone().multiplyScalar(this.speed * deltaTime);
-
-      position.add(move);
-      this.node.setWorldPosition(position);
-
-      // 좌우 이동 시 스프라이트 반전
-      if (Math.abs(direction.x) > 0.01) {
-        const scale = this.node.getScale();
-        this.node.setScale(
-          direction.x > 0 ? Math.abs(scale.x) : -Math.abs(scale.x),
-          scale.y,
-          scale.z
-        );
-      }
+  private move(direction: Vec3, deltaTime: number) {
+    if (direction.lengthSqr() === 0) {
+      return;
     }
+
+    // deltaTime 곱해서 프레임 독립적 이동
+    const move = direction.clone().multiplyScalar(this.speed * deltaTime);
+
+    const position = this.node.worldPosition.clone().add(move);
+    this.node.setWorldPosition(position);
+
+    // 좌우 이동 시 스프라이트 반전
+    this.updateScale(direction.x);
+  }
+
+  private updateScale(x: number) {
+    if (Math.abs(x) < 0.01) {
+      return;
+    }
+
+    const scale = this.node.scale;
+    this.node.setScale(
+      x > 0 ? Math.abs(scale.x) : -Math.abs(scale.x),
+      scale.y,
+      scale.z
+    );
   }
 
   public attack() {
@@ -60,25 +73,78 @@ export class Player extends Component {
       return;
     }
 
-    const state = this.animation.getState("player_1_shot");
+    const target = this.findClosestZombie();
+
+    if (!target) {
+      this.resetToIdle();
+      return;
+    }
 
     this.isAttacking = true;
     this.playAnimation("player_1_shot");
 
-    setTimeout(() => {
-      this.isAttacking = false;
-      this.playAnimation("player_1_idle"); // 공격 후 복귀
-    }, state.duration * 1000);
+    const state = this.animation.getState("player_1_shot");
+    setTimeout(() => this.resetToIdle(), state.duration * 1000);
+  }
+
+  private findClosestZombie(): Node | null {
+    const zombies = GameManager.Instance.zombieSpawner.zombies;
+
+    if (!zombies || zombies.length === 0) {
+      return null;
+    }
+
+    const playerPos = this.node.worldPosition;
+
+    // 플레이어가 바라보는 방향
+    const playerForward = new Vec3(this.node.scale.x > 0 ? 1 : -1, 0, 0);
+
+    let closestZombie: Node | null = null;
+    let minDist = Infinity;
+
+    // 가장 가까운 조건 만족 좀비 찾기
+    for (const zombie of zombies) {
+      const zombiePos = zombie.worldPosition;
+      const toZombie = new Vec3(
+        zombiePos.x - playerPos.x,
+        0,
+        zombiePos.z - playerPos.z
+      );
+      const dist = toZombie.length();
+
+      if (dist > 1000) {
+        continue;
+      }
+
+      toZombie.normalize();
+
+      // 내적 → cos(theta)
+      const dot = playerForward.x * toZombie.x + playerForward.z * toZombie.z;
+
+      // ±90도 체크
+      // cos(90°) = 0, cos(0°) = 1
+      if (dot <= 0) {
+        continue;
+      }
+
+      if (dist < minDist) {
+        minDist = dist;
+        closestZombie = zombie;
+      }
+    }
+
+    return closestZombie;
+  }
+
+  private resetToIdle() {
+    this.isAttacking = false;
+    this.playAnimation("player_1_idle");
   }
 
   private playAnimation(name: string) {
     const state = this.animation.getState(name);
 
-    if (!state) {
-      return;
-    }
-
-    if (this.currentAnim === name && state.isPlaying) {
+    if (!state || (this.currentAnim === name && state.isPlaying)) {
       return;
     }
 

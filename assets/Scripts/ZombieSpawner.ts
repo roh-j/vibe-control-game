@@ -1,10 +1,13 @@
-import { _decorator, Component, instantiate, Prefab, Vec3 } from "cc";
+import { _decorator, Component, instantiate, Node, Prefab, Vec3 } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("ZombieSpawner")
 export class ZombieSpawner extends Component {
   @property({ type: Prefab })
   public zombiePrefab: Prefab;
+
+  // 초기화
+  public zombies: Node[] = [];
 
   spawnZombie(position: Vec3) {
     // 프리팹 인스턴스 생성
@@ -13,6 +16,8 @@ export class ZombieSpawner extends Component {
 
     zombieNode.setWorldPosition(position);
     this.node.addChild(zombieNode);
+
+    this.zombies.push(zombieNode);
   }
 
   spawnMultipleZombies(positions: Vec3[]) {

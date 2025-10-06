@@ -1,4 +1,4 @@
-import { _decorator, Animation, Component } from "cc";
+import { _decorator, Animation, Component, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
 const { ccclass, property } = _decorator;
 
@@ -25,41 +25,62 @@ export class Zombie extends Component {
     const direction = playerPos.clone().subtract(currentPos);
 
     // 플레이어와 좀비 거리
-    const distance = direction.length();
+    const dist = direction.length();
 
     // 이동 방향 단위 벡터
     const normalizedDir = direction.clone().normalize();
 
+    this.updateAnimation(dist);
+    this.move(currentPos, direction, dist, normalizedDir, deltaTime);
+  }
+
+  private updateAnimation(dist: number) {
     // 애니메이션 상태 결정: 가까우면 idle, 멀면 walk
-    const nextAnim = distance > 1 ? "zombie_1_walk" : "zombie_1_idle";
+    const nextAnim = dist > 1 ? "zombie_1_walk" : "zombie_1_idle";
+
     if (this.currentAnim !== nextAnim) {
       this.playAnimation(nextAnim);
     }
+  }
 
+  private move(
+    currentPos: Vec3,
+    direction: Vec3,
+    dist: number,
+    normalizedDir: Vec3,
+    deltaTime: number
+  ) {
     // 플레이어와 거리가 1 이상이면 이동
-    if (distance > 1) {
-      const move = normalizedDir.multiplyScalar(this.speed * deltaTime);
-      // deltaTime 곱해서 프레임 독립적 이동
-      this.node.setWorldPosition(currentPos.add(move));
-
-      // 좌우 방향에 따라 스프라이트 반전
-      const scale = this.node.getScale();
-      this.node.setScale(
-        normalizedDir.x > 0 ? Math.abs(scale.x) : -Math.abs(scale.x),
-        scale.y,
-        scale.z
-      );
+    if (dist < 1) {
+      return;
     }
+
+    const move = normalizedDir.multiplyScalar(this.speed * deltaTime);
+
+    // deltaTime 곱해서 프레임 독립적 이동
+    this.node.setWorldPosition(currentPos.add(move));
+
+    // 좌우 이동 시 스프라이트 반전
+    this.updateScale(normalizedDir, direction.x);
+  }
+
+  private updateScale(normalizedDir: Vec3, x: number) {
+    if (Math.abs(x) < 0.01) {
+      return;
+    }
+
+    const scale = this.node.getScale();
+    this.node.setScale(
+      normalizedDir.x > 0 ? Math.abs(scale.x) : -Math.abs(scale.x),
+      scale.y,
+      scale.z
+    );
   }
 
   private playAnimation(name: string) {
     const state = this.animation.getState(name);
 
-    if (!state) {
-      return;
-    }
-
-    if (this.currentAnim === name && state.isPlaying) {
+    if (!state || (this.currentAnim === name && state.isPlaying)) {
       return;
     }
 
