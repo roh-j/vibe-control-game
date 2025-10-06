@@ -2,12 +2,12 @@
   "ver": "2.0.4",
   "importer": "animation-clip",
   "imported": true,
-  "uuid": "45db6d0c-6de6-425f-b82f-fe38613ca867",
+  "uuid": "0e0a3729-f8fd-4300-825f-7a13adbfcd66",
   "files": [
     ".bin"
   ],
   "subMetas": {},
   "userData": {
-    "name": "zombie_walk"
+    "name": "player_1_run"
   }
 }

@@ -9,20 +9,26 @@ export class Player extends Component {
 
   private animation: Animation;
   private currentAnim: string = "";
+  private isAttacking: boolean = false;
 
   start() {
     this.animation = this.getComponent(Animation);
 
     // 초기 애니메이션 설정 (대기 상태)
-    this.playAnimation("player_idle");
+    this.playAnimation("player_1_idle");
   }
 
   update(deltaTime: number) {
+    if (this.isAttacking) {
+      return;
+    }
+
     // GameManager에서 입력 방향 가져오기
     const direction = GameManager.Instance.inputDirection;
 
     // lengthSqr() → 벡터 길이 제곱 (0 이면 정지, > 0 이면 이동)
-    const nextAnim = direction.lengthSqr() > 0 ? "player_run" : "player_idle";
+    const nextAnim =
+      direction.lengthSqr() > 0 ? "player_1_run" : "player_1_idle";
 
     if (this.currentAnim !== nextAnim) {
       this.playAnimation(nextAnim);
@@ -47,6 +53,22 @@ export class Player extends Component {
         );
       }
     }
+  }
+
+  public attack() {
+    if (this.isAttacking) {
+      return;
+    }
+
+    const state = this.animation.getState("player_1_shot");
+
+    this.isAttacking = true;
+    this.playAnimation("player_1_shot");
+
+    setTimeout(() => {
+      this.isAttacking = false;
+      this.playAnimation("player_1_idle"); // 공격 후 복귀
+    }, state.duration * 1000);
   }
 
   private playAnimation(name: string) {

@@ -11,8 +11,8 @@ import {
 } from "cc";
 const { ccclass, property } = _decorator;
 
-@ccclass("PlayerController")
-export class PlayerController extends Component {
+@ccclass("PlayerMovementController")
+export class PlayerMovementController extends Component {
   @property({ type: Number })
   private deadZone: number = 50; // 입력 무시 최소 거리 (조이스틱 DeadZone)
 
@@ -34,18 +34,14 @@ export class PlayerController extends Component {
     );
 
     // 터치 이벤트 등록
+    this.node.on(Input.EventType.MOUSE_DOWN, this.onTouch, this);
     this.node.on(Input.EventType.TOUCH_START, this.onTouch, this);
-    this.node.on(Input.EventType.TOUCH_MOVE, this.onTouch, this);
-    this.node.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
-    this.node.on(Input.EventType.TOUCH_CANCEL, this.onTouchEnd, this);
   }
 
   onDestroy() {
     // 이벤트 해제
+    this.node.off(Input.EventType.MOUSE_DOWN, this.onTouch, this);
     this.node.off(Input.EventType.TOUCH_START, this.onTouch, this);
-    this.node.off(Input.EventType.TOUCH_MOVE, this.onTouch, this);
-    this.node.off(Input.EventType.TOUCH_END, this.onTouchEnd, this);
-    this.node.off(Input.EventType.TOUCH_CANCEL, this.onTouchEnd, this);
   }
 
   private onTouch(event: EventTouch) {
@@ -67,10 +63,5 @@ export class PlayerController extends Component {
     direction.normalize();
     // 단위 벡터로 변환 후 GameManager에 저장
     GameManager.Instance.inputDirection.set(direction.x, direction.y, 0);
-  }
-
-  private onTouchEnd(event: EventTouch) {
-    // 터치 종료 시 입력 초기화 가능
-    GameManager.Instance.inputDirection.set(0, 0, 0);
   }
 }

@@ -2,12 +2,12 @@
   "ver": "2.0.4",
   "importer": "animation-clip",
   "imported": true,
-  "uuid": "8101e308-bf4a-4cb4-9612-318e4478250b",
+  "uuid": "3937350c-e2b8-4337-be2e-6c62a5ee99d2",
   "files": [
     ".bin"
   ],
   "subMetas": {},
   "userData": {
-    "name": "player_idle"
+    "name": "zombie_1_idle"
   }
 }

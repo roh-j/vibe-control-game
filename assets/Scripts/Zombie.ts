@@ -1,4 +1,4 @@
-import { _decorator, Animation, Component, Node, Vec3 } from "cc";
+import { _decorator, Animation, Component } from "cc";
 import { GameManager } from "./GameManager";
 const { ccclass, property } = _decorator;
 
@@ -14,7 +14,7 @@ export class Zombie extends Component {
     this.animation = this.getComponent(Animation);
 
     // 초기 애니메이션 설정 (대기 상태)
-    this.playAnimation("zombie_idle");
+    this.playAnimation("zombie_1_idle");
   }
 
   update(deltaTime: number) {
@@ -31,7 +31,7 @@ export class Zombie extends Component {
     const normalizedDir = direction.clone().normalize();
 
     // 애니메이션 상태 결정: 가까우면 idle, 멀면 walk
-    const nextAnim = distance > 1 ? "zombie_walk" : "zombie_idle";
+    const nextAnim = distance > 1 ? "zombie_1_walk" : "zombie_1_idle";
     if (this.currentAnim !== nextAnim) {
       this.playAnimation(nextAnim);
     }

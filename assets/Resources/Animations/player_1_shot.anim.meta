@@ -2,12 +2,12 @@
   "ver": "2.0.4",
   "importer": "animation-clip",
   "imported": true,
-  "uuid": "0e0a3729-f8fd-4300-825f-7a13adbfcd66",
+  "uuid": "17cffa9a-8702-4df4-aba7-5c77b2df6823",
   "files": [
     ".bin"
   ],
   "subMetas": {},
   "userData": {
-    "name": "player_run"
+    "name": "player_1_shot"
   }
 }
