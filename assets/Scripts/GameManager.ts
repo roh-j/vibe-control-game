@@ -1,17 +1,13 @@
-import { _decorator, Component, director, Node } from "cc";
+import { _decorator, Component, Vec3 } from "cc";
 const { ccclass } = _decorator;
 
 @ccclass("GameManager")
 export class GameManager extends Component {
-  private static _instance: GameManager;
+  public static Instance: GameManager;
 
-  public static get Instance(): GameManager {
-    if (!this._instance) {
-      const node = new Node("GameManager");
-      this._instance = node.addComponent(GameManager);
-      director.getScene().addChild(node);
-    }
+  public inputDirection: Vec3 = new Vec3();
 
-    return this._instance;
+  onLoad() {
+    GameManager.Instance = this;
   }
 }
