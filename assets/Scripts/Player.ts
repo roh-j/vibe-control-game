@@ -1,12 +1,13 @@
 import { _decorator, Animation, Component } from "cc";
 import { GameManager } from "./GameManager";
-const { ccclass } = _decorator;
+const { ccclass, property } = _decorator;
 
 @ccclass("Player")
 export class Player extends Component {
-  public animation: Animation;
-
+  @property({ type: Number })
   public speed: number = 300;
+
+  private animation: Animation;
   private currentAnim: string = "";
 
   start() {
