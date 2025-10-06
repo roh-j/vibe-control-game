@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.AnimationClip",
-    "_name": "run",
+    "_name": "player_run",
     "_objFlags": 0,
     "__editorExtras__": {
       "embeddedPlayerGroups": []

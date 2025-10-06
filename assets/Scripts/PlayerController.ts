@@ -14,22 +14,26 @@ const { ccclass, property } = _decorator;
 @ccclass("PlayerController")
 export class PlayerController extends Component {
   @property({ type: Number })
-  private deadZone: number = 50;
+  private deadZone: number = 50; // 입력 무시 최소 거리 (조이스틱 DeadZone)
 
-  private screenPosition: Vec2;
+  private screenPos: Vec2; // 노드 중심 기준 스크린 좌표
 
   start() {
-    const worldPosition = this.node.worldPosition;
+    const worldPos = this.node.worldPosition;
     const canvas = this.node.scene.getComponentInChildren(Canvas);
     const uiTransform = canvas.getComponent(UITransform);
-    const uiPosition = uiTransform.convertToNodeSpaceAR(worldPosition);
+
+    // 월드 좌표 → 캔버스 로컬 좌표 (중앙 기준)
+    const uiPos = uiTransform.convertToNodeSpaceAR(worldPos);
     const visibleSize = view.getVisibleSize();
 
-    this.screenPosition = new Vec2(
-      uiPosition.x + visibleSize.width / 2,
-      uiPosition.y + visibleSize.height / 2
+    // 화면 좌표로 변환 (0,0 기준 → 좌측 하단)
+    this.screenPos = new Vec2(
+      uiPos.x + visibleSize.width / 2,
+      uiPos.y + visibleSize.height / 2
     );
 
+    // 터치 이벤트 등록
     this.node.on(Input.EventType.TOUCH_START, this.onTouch, this);
     this.node.on(Input.EventType.TOUCH_MOVE, this.onTouch, this);
     this.node.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
@@ -37,6 +41,7 @@ export class PlayerController extends Component {
   }
 
   onDestroy() {
+    // 이벤트 해제
     this.node.off(Input.EventType.TOUCH_START, this.onTouch, this);
     this.node.off(Input.EventType.TOUCH_MOVE, this.onTouch, this);
     this.node.off(Input.EventType.TOUCH_END, this.onTouchEnd, this);
@@ -44,21 +49,28 @@ export class PlayerController extends Component {
   }
 
   private onTouch(event: EventTouch) {
-    const touchPosition = event.getUILocation();
+    // 터치 위치 (스크린 좌표)
+    const touchPos = event.getUILocation();
 
+    // 터치 위치 기준 방향 계산
     const direction = new Vec2(
-      touchPosition.x - this.screenPosition.x,
-      touchPosition.y - this.screenPosition.y
+      touchPos.x - this.screenPos.x,
+      touchPos.y - this.screenPos.y
     );
 
+    // DeadZone 안이면 입력 무시
     if (direction.length() < this.deadZone) {
       GameManager.Instance.inputDirection.set(0, 0, 0);
       return;
     }
 
     direction.normalize();
+    // 단위 벡터로 변환 후 GameManager에 저장
     GameManager.Instance.inputDirection.set(direction.x, direction.y, 0);
   }
 
-  private onTouchEnd(event: EventTouch) {}
+  private onTouchEnd(event: EventTouch) {
+    // 터치 종료 시 입력 초기화 가능
+    GameManager.Instance.inputDirection.set(0, 0, 0);
+  }
 }

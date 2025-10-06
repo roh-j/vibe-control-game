@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.AnimationClip",
-    "_name": "idle",
+    "_name": "player_idle",
     "_objFlags": 0,
     "__editorExtras__": {
       "embeddedPlayerGroups": []

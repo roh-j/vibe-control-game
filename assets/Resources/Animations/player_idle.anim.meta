@@ -2,12 +2,12 @@
   "ver": "2.0.4",
   "importer": "animation-clip",
   "imported": true,
-  "uuid": "0e0a3729-f8fd-4300-825f-7a13adbfcd66",
+  "uuid": "8101e308-bf4a-4cb4-9612-318e4478250b",
   "files": [
     ".bin"
   ],
   "subMetas": {},
   "userData": {
-    "name": "run"
+    "name": "player_idle"
   }
 }

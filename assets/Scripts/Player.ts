@@ -12,29 +12,34 @@ export class Player extends Component {
 
   start() {
     this.animation = this.getComponent(Animation);
-    this.playAnimation("idle");
+
+    // 초기 애니메이션 설정 (대기 상태)
+    this.playAnimation("player_idle");
   }
 
   update(deltaTime: number) {
+    // GameManager에서 입력 방향 가져오기
     const direction = GameManager.Instance.inputDirection;
-    const nextAnim = direction.lengthSqr() > 0 ? "run" : "idle";
+
+    // lengthSqr() → 벡터 길이 제곱 (0 이면 정지, > 0 이면 이동)
+    const nextAnim = direction.lengthSqr() > 0 ? "player_run" : "player_idle";
 
     if (this.currentAnim !== nextAnim) {
       this.playAnimation(nextAnim);
     }
 
-    // 플레이어가 움직일 때
     if (direction.lengthSqr() > 0) {
       const position = this.node.getWorldPosition();
+
+      // deltaTime 곱해서 프레임 독립적 이동
       const move = direction.clone().multiplyScalar(this.speed * deltaTime);
 
       position.add(move);
-
       this.node.setWorldPosition(position);
 
+      // 좌우 이동 시 스프라이트 반전
       if (Math.abs(direction.x) > 0.01) {
         const scale = this.node.getScale();
-
         this.node.setScale(
           direction.x > 0 ? Math.abs(scale.x) : -Math.abs(scale.x),
           scale.y,
