@@ -1,4 +1,4 @@
-import { _decorator, Animation, Component, Node, Vec3 } from "cc";
+import { _decorator, Animation, Component, Node, UITransform, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
 const { ccclass, property } = _decorator;
 
@@ -94,36 +94,31 @@ export class Player extends Component {
       return null;
     }
 
-    const playerPos = this.node.worldPosition;
-
-    // 플레이어가 바라보는 방향
-    const playerForward = new Vec3(this.node.scale.x > 0 ? 1 : -1, 0, 0);
-
     let closestZombie: Node | null = null;
     let minDist = Infinity;
 
     // 가장 가까운 조건 만족 좀비 찾기
     for (const zombie of zombies) {
-      const zombiePos = zombie.worldPosition;
-      const toZombie = new Vec3(
-        zombiePos.x - playerPos.x,
-        0,
-        zombiePos.z - playerPos.z
-      );
-      const dist = toZombie.length();
+      const uiTransform = this.node.getComponent(UITransform);
 
-      if (dist > 1000) {
+      // 좀비
+      const zombiePos = zombie.worldPosition;
+      const toZombie = uiTransform.convertToNodeSpaceAR(zombiePos);
+      const zombieForward = new Vec3(zombie.scale.x > 0 ? 1 : -1, 0, 0);
+      const zombieForwardDir = zombieForward.normalize();
+
+      // 플레이어
+      const playerForward = new Vec3(this.node.scale.x > 0 ? 1 : -1, 0, 0);
+      const playerForwardDir = playerForward.normalize();
+
+      const dist = Math.sqrt(toZombie.x ** 2 + toZombie.y ** 2);
+
+      if (dist > 200) {
         continue;
       }
 
-      toZombie.normalize();
-
-      // 내적 → cos(theta)
-      const dot = playerForward.x * toZombie.x + playerForward.z * toZombie.z;
-
-      // ±90도 체크
-      // cos(90°) = 0, cos(0°) = 1
-      if (dot <= 0) {
+      // 플레이어와 좀비가 마주보는지 확인
+      if (zombieForwardDir.x + playerForwardDir.x !== 0) {
         continue;
       }
 
