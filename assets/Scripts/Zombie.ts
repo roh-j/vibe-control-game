@@ -36,6 +36,7 @@ export class Zombie extends Component {
 
   update(deltaTime: number) {
     if (
+      GameManager.Instance.isGameOver ||
       this.state === ZombieState.Dead ||
       this.state === ZombieState.Hurt ||
       this.state === ZombieState.Attack
@@ -180,5 +181,9 @@ export class Zombie extends Component {
 
     this.animation.play(name);
     this.currentAnim = name;
+  }
+
+  public switchToIdle() {
+    this.changeState(ZombieState.Idle);
   }
 }

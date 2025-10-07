@@ -1,6 +1,14 @@
-import { _decorator, Animation, Component, Node, UITransform, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
 import { Zombie } from "./Zombie";
+import {
+  _decorator,
+  Animation,
+  Component,
+  Node,
+  ProgressBar,
+  UITransform,
+  Vec3,
+} from "cc";
 const { ccclass, property } = _decorator;
 
 enum PlayerState {
@@ -15,6 +23,9 @@ enum PlayerState {
 export class Player extends Component {
   @property({ type: Number })
   public speed: number = 300;
+
+  @property({ type: ProgressBar })
+  public hpBar: ProgressBar;
 
   private animation: Animation;
 
@@ -40,6 +51,8 @@ export class Player extends Component {
     ) {
       return; // 공격 중이거나 피격, 사망 상태일 때는 이동/공격 금지
     }
+
+    this.updateHPBarPosition();
 
     // 입력 방향 가져오기
     const direction = GameManager.Instance.inputDirection;
@@ -82,17 +95,38 @@ export class Player extends Component {
     }
   }
 
+  private updateHPBarPosition(offsetY: number = 140) {
+    if (!this.hpBar) {
+      return;
+    }
+
+    const playerWorldPos = this.node.worldPosition.clone();
+
+    this.hpBar.node.setWorldPosition(
+      playerWorldPos.x,
+      playerWorldPos.y + offsetY,
+      playerWorldPos.z
+    );
+  }
+
   public takeDamage(amount: number = 20) {
     if (this.state === PlayerState.Dead) {
       return;
     }
 
     this.health -= amount;
+    this.updateHPBar();
 
     if (this.health <= 0) {
       this.changeState(PlayerState.Dead);
     } else {
       this.changeState(PlayerState.Hurt);
+    }
+  }
+
+  private updateHPBar() {
+    if (this.hpBar) {
+      this.hpBar.progress = this.health / this.maxHealth;
     }
   }
 
@@ -135,7 +169,7 @@ export class Player extends Component {
     const state = this.animation.getState("player_1_dead");
 
     setTimeout(() => {
-      console.log("DEAD");
+      GameManager.Instance.gameOver();
     }, state.duration * 1000);
   }
 
