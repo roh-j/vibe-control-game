@@ -1,6 +1,15 @@
 import { _decorator, Animation, Component, Node, UITransform, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
+import { Zombie } from "./Zombie";
 const { ccclass, property } = _decorator;
+
+enum PlayerState {
+  Idle = "idle",
+  Run = "run",
+  Attack = "attack",
+  Hurt = "hurt",
+  Dead = "dead",
+}
 
 @ccclass("Player")
 export class Player extends Component {
@@ -8,43 +17,129 @@ export class Player extends Component {
   public speed: number = 300;
 
   private animation: Animation;
+
+  private maxHealth: number = 100;
+  private health: number = 0;
+
+  private state: PlayerState = PlayerState.Idle;
   private currentAnim: string = "";
-  private isAttacking: boolean = false;
 
   start() {
     this.animation = this.getComponent(Animation);
+    this.health = this.maxHealth;
 
     // 초기 애니메이션 설정 (대기 상태)
-    this.playAnimation("player_1_idle");
+    this.changeState(PlayerState.Idle);
   }
 
   update(deltaTime: number) {
-    if (this.isAttacking) {
+    if (
+      this.state === PlayerState.Dead ||
+      this.state === PlayerState.Hurt ||
+      this.state === PlayerState.Attack
+    ) {
+      return; // 공격 중이거나 피격, 사망 상태일 때는 이동/공격 금지
+    }
+
+    // 입력 방향 가져오기
+    const direction = GameManager.Instance.inputDirection;
+
+    if (direction.lengthSqr() > 0) {
+      // 이동 중 상태
+      this.changeState(PlayerState.Run);
+      this.move(direction, deltaTime);
+    } else {
+      this.changeState(PlayerState.Idle);
+    }
+  }
+
+  private changeState(nextState: PlayerState) {
+    if (this.state === nextState || this.state === PlayerState.Dead) {
+      return; // 사망 후엔 상태 전환 불가
+    }
+
+    this.state = nextState;
+
+    switch (nextState) {
+      case PlayerState.Idle:
+        this.playAnimation("player_1_idle");
+        break;
+      case PlayerState.Run:
+        this.playAnimation("player_1_run");
+        break;
+      case PlayerState.Attack:
+        this.playAnimation("player_1_shot");
+        this.handleAttack();
+        break;
+      case PlayerState.Hurt:
+        this.playAnimation("player_1_hurt");
+        this.handleHurt();
+        break;
+      case PlayerState.Dead:
+        this.playAnimation("player_1_dead");
+        this.handleDeath();
+        break;
+    }
+  }
+
+  public takeDamage(amount: number = 20) {
+    if (this.state === PlayerState.Dead) {
       return;
     }
 
-    // GameManager에서 입력 방향 가져오기
-    const direction = GameManager.Instance.inputDirection;
+    this.health -= amount;
 
-    this.updateAnimation(direction);
-    this.move(direction, deltaTime);
+    if (this.health <= 0) {
+      this.changeState(PlayerState.Dead);
+    } else {
+      this.changeState(PlayerState.Hurt);
+    }
   }
 
-  private updateAnimation(direction: Vec3) {
-    // lengthSqr() → 벡터 길이 제곱 (0 이면 정지, > 0 이면 이동)
-    const nextAnim =
-      direction.lengthSqr() > 0 ? "player_1_run" : "player_1_idle";
+  private handleHurt() {
+    const state = this.animation.getState("player_1_hurt");
 
-    if (this.currentAnim !== nextAnim) {
-      this.playAnimation(nextAnim);
+    setTimeout(() => {
+      if (this.state !== PlayerState.Dead) {
+        this.changeState(PlayerState.Idle);
+      }
+    }, state.duration * 1000);
+  }
+
+  public attack() {
+    this.changeState(PlayerState.Attack);
+  }
+
+  private handleAttack() {
+    const closestZombie = this.findClosestZombie();
+
+    if (!closestZombie) {
+      this.changeState(PlayerState.Idle);
+      return;
     }
+
+    // 좀비 데미지 처리
+    const zombieComp = closestZombie.getComponent(Zombie);
+    zombieComp.takeDamage();
+
+    const state = this.animation.getState("player_1_shot");
+
+    setTimeout(() => {
+      if (this.state === PlayerState.Attack) {
+        this.changeState(PlayerState.Idle);
+      }
+    }, state.duration * 1000);
+  }
+
+  private handleDeath() {
+    const state = this.animation.getState("player_1_dead");
+
+    setTimeout(() => {
+      console.log("DEAD");
+    }, state.duration * 1000);
   }
 
   private move(direction: Vec3, deltaTime: number) {
-    if (direction.lengthSqr() === 0) {
-      return;
-    }
-
     // deltaTime 곱해서 프레임 독립적 이동
     const move = direction.clone().multiplyScalar(this.speed * deltaTime);
 
@@ -56,35 +151,13 @@ export class Player extends Component {
   }
 
   private updateScale(x: number) {
-    if (Math.abs(x) < 0.01) {
-      return;
-    }
-
     const scale = this.node.scale;
+
     this.node.setScale(
       x > 0 ? Math.abs(scale.x) : -Math.abs(scale.x),
       scale.y,
       scale.z
     );
-  }
-
-  public attack() {
-    if (this.isAttacking) {
-      return;
-    }
-
-    const target = this.findClosestZombie();
-
-    if (!target) {
-      this.resetToIdle();
-      return;
-    }
-
-    this.isAttacking = true;
-    this.playAnimation("player_1_shot");
-
-    const state = this.animation.getState("player_1_shot");
-    setTimeout(() => this.resetToIdle(), state.duration * 1000);
   }
 
   private findClosestZombie(): Node | null {
@@ -101,13 +174,15 @@ export class Player extends Component {
     for (const zombie of zombies) {
       const uiTransform = this.node.getComponent(UITransform);
 
-      // 좀비
+      // 좀비 위치를 플레이어 로컬 좌표로 변환
       const zombiePos = zombie.worldPosition;
       const toZombie = uiTransform.convertToNodeSpaceAR(zombiePos);
+
+      // 좀비 방향
       const zombieForward = new Vec3(zombie.scale.x > 0 ? 1 : -1, 0, 0);
       const zombieForwardDir = zombieForward.normalize();
 
-      // 플레이어
+      // 플레이어 방향
       const playerForward = new Vec3(this.node.scale.x > 0 ? 1 : -1, 0, 0);
       const playerForwardDir = playerForward.normalize();
 
@@ -117,7 +192,7 @@ export class Player extends Component {
         continue;
       }
 
-      // 플레이어와 좀비가 마주보는지 확인
+      // 플레이어와 좀비가 서로 마주보고 있는 경우만 공격
       if (zombieForwardDir.x + playerForwardDir.x !== 0) {
         continue;
       }
@@ -129,11 +204,6 @@ export class Player extends Component {
     }
 
     return closestZombie;
-  }
-
-  private resetToIdle() {
-    this.isAttacking = false;
-    this.playAnimation("player_1_idle");
   }
 
   private playAnimation(name: string) {

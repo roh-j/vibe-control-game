@@ -20,6 +20,14 @@ export class ZombieSpawner extends Component {
     this.zombies.push(zombieNode);
   }
 
+  removeZombie(zombieNode: Node) {
+    const index = this.zombies.indexOf(zombieNode);
+
+    if (index !== -1) {
+      this.zombies.splice(index, 1);
+    }
+  }
+
   spawnMultipleZombies(positions: Vec3[]) {
     // 여러 위치에 좀비 생성
     positions.forEach((pos) => this.spawnZombie(pos));

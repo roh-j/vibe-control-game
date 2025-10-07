@@ -6,7 +6,6 @@ import {
   Input,
   Vec2,
   UITransform,
-  Canvas,
   view,
 } from "cc";
 const { ccclass, property } = _decorator;
@@ -20,7 +19,7 @@ export class PlayerMovementController extends Component {
 
   start() {
     const worldPos = this.node.worldPosition;
-    const canvas = this.node.scene.getComponentInChildren(Canvas);
+    const canvas = GameManager.Instance.canvas;
     const uiTransform = canvas.getComponent(UITransform);
 
     // 월드 좌표 → 캔버스 로컬 좌표 (중앙 기준)

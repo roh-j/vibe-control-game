@@ -513,10 +513,18 @@
       {
         "__uuid__": "17cffa9a-8702-4df4-aba7-5c77b2df6823",
         "__expectedType__": "cc.AnimationClip"
+      },
+      {
+        "__uuid__": "07193c8a-6085-427b-8eb5-23cf3cc4d5b6",
+        "__expectedType__": "cc.AnimationClip"
+      },
+      {
+        "__uuid__": "81fef81d-8f05-418b-9a8b-168afd26db05",
+        "__expectedType__": "cc.AnimationClip"
       }
     ],
     "_defaultClip": {
-      "__uuid__": "17cffa9a-8702-4df4-aba7-5c77b2df6823",
+      "__uuid__": "8101e308-bf4a-4cb4-9612-318e4478250b",
       "__expectedType__": "cc.AnimationClip"
     },
     "_id": "40PgQd2AxF87fIbdx6oLFh"
