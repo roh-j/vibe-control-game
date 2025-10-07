@@ -11,7 +11,7 @@ import {
 } from "cc";
 const { ccclass, property } = _decorator;
 
-enum PlayerState {
+export enum PlayerState {
   Idle = "idle",
   Run = "run",
   Attack = "attack",
@@ -55,7 +55,7 @@ export class Player extends Component {
     this.updateHPBarPosition();
 
     // 입력 방향 가져오기
-    const direction = GameManager.Instance.inputDirection;
+    const direction = GameManager.Instance.getInputDirection();
 
     if (direction.lengthSqr() > 0) {
       // 이동 중 상태
@@ -64,6 +64,10 @@ export class Player extends Component {
     } else {
       this.changeState(PlayerState.Idle);
     }
+  }
+
+  public getState() {
+    return this.state;
   }
 
   private changeState(nextState: PlayerState) {
@@ -96,11 +100,7 @@ export class Player extends Component {
   }
 
   private updateHPBarPosition(offsetY: number = 140) {
-    if (!this.hpBar) {
-      return;
-    }
-
-    const playerWorldPos = this.node.worldPosition.clone();
+    const playerWorldPos = this.node.getWorldPosition();
 
     this.hpBar.node.setWorldPosition(
       playerWorldPos.x,
@@ -177,7 +177,7 @@ export class Player extends Component {
     // deltaTime 곱해서 프레임 독립적 이동
     const move = direction.clone().multiplyScalar(this.speed * deltaTime);
 
-    const position = this.node.worldPosition.clone().add(move);
+    const position = this.node.getWorldPosition().add(move);
     this.node.setWorldPosition(position);
 
     // 좌우 이동 시 스프라이트 반전
@@ -209,7 +209,7 @@ export class Player extends Component {
       const uiTransform = this.node.getComponent(UITransform);
 
       // 좀비 위치를 플레이어 로컬 좌표로 변환
-      const zombiePos = zombie.worldPosition;
+      const zombiePos = zombie.getWorldPosition();
       const toZombie = uiTransform.convertToNodeSpaceAR(zombiePos);
 
       // 좀비 방향

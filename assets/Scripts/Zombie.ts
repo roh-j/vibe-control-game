@@ -2,7 +2,7 @@ import { _decorator, Animation, Component, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
 const { ccclass, property } = _decorator;
 
-enum ZombieState {
+export enum ZombieState {
   Idle = "idle",
   Walk = "walk",
   Attack = "attack",
@@ -45,11 +45,11 @@ export class Zombie extends Component {
     }
 
     const playerNode = GameManager.Instance.player.node;
-    const playerPos = playerNode.worldPosition;
-    const currentPos = this.node.worldPosition;
+    const playerPos = playerNode.getWorldPosition();
+    const currentPos = this.node.getWorldPosition();
 
     // 플레이어 방향 벡터 계산
-    const direction = playerPos.clone().subtract(currentPos);
+    const direction = playerPos.subtract(currentPos);
 
     // 플레이어와 좀비 거리
     const dist = direction.length();
@@ -66,6 +66,10 @@ export class Zombie extends Component {
     // 이동 중 상태
     this.changeState(ZombieState.Walk);
     this.move(currentPos, dist, normalizedDir, deltaTime);
+  }
+
+  public getState() {
+    return this.state;
   }
 
   private changeState(nextState: ZombieState) {
