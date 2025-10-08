@@ -1,5 +1,6 @@
 import { _decorator, Camera, Canvas, Component, Node, tween, Vec3 } from "cc";
 import { Player } from "./Player";
+import { SoundManager } from "./SoundManager";
 import { Zombie } from "./Zombie";
 import { ZombieSpawner } from "./ZombieSpawner";
 const { ccclass, property } = _decorator;
@@ -21,7 +22,7 @@ export class GameManager extends Component {
   @property({ type: Node })
   public gameOverPopup: Node;
 
-  // 싱글톤 패턴으로, 어디서든 GameManager.Instance로 접근 가능
+  // 싱글톤 패턴
   public static Instance: GameManager;
 
   // 플레이어 방향
@@ -29,6 +30,11 @@ export class GameManager extends Component {
   public isGameOver: boolean = false;
 
   onLoad() {
+    if (GameManager.Instance) {
+      this.destroy();
+      return;
+    }
+
     // 싱글톤 초기화
     GameManager.Instance = this;
 
@@ -54,6 +60,8 @@ export class GameManager extends Component {
     this.zombieSpawner.zombies.forEach((zombie) => {
       zombie.getComponent(Zombie).switchToIdle();
     });
+
+    SoundManager.Instance.stopBGM();
 
     // 팝업 활성화
     this.gameOverPopup.active = true;

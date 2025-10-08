@@ -1,4 +1,5 @@
 import { GameManager } from "./GameManager";
+import { SoundManager } from "./SoundManager";
 import { Zombie } from "./Zombie";
 import {
   _decorator,
@@ -151,6 +152,9 @@ export class Player extends Component {
       this.changeState(PlayerState.Idle);
       return;
     }
+
+    // SFX 재생
+    SoundManager.Instance.playSFX();
 
     // 좀비 데미지 처리
     const zombieComp = closestZombie.getComponent(Zombie);
