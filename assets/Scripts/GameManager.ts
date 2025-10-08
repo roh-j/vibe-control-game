@@ -13,6 +13,9 @@ export class GameManager extends Component {
   @property({ type: Camera })
   public camera: Camera;
 
+  @property({ type: Node })
+  public groundMap: Node;
+
   @property({ type: Player })
   public player: Player;
 

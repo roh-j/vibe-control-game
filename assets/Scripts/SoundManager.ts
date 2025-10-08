@@ -10,7 +10,8 @@ export class SoundManager extends Component {
   public bgmClips: AudioClip[] = [];
 
   public static Instance: SoundManager;
-  private audioSource: AudioSource;
+  private bgmAudioSource: AudioSource;
+  private sfxAudioSource: AudioSource;
 
   onLoad() {
     if (SoundManager.Instance) {
@@ -20,20 +21,21 @@ export class SoundManager extends Component {
 
     // 싱글톤 설정
     SoundManager.Instance = this;
-    this.audioSource = this.getComponent(AudioSource);
+    this.bgmAudioSource = this.addComponent(AudioSource);
+    this.sfxAudioSource = this.addComponent(AudioSource);
 
     this.playBGM();
   }
 
   public playBGM() {
-    this.audioSource.clip = this.bgmClips[0];
-    this.audioSource.loop = true;
-    this.audioSource.volume = 0.5;
-    this.audioSource.play();
+    this.bgmAudioSource.clip = this.bgmClips[0];
+    this.bgmAudioSource.loop = true;
+    this.bgmAudioSource.volume = 0.5;
+    this.bgmAudioSource.play();
   }
 
   public stopBGM(fadeTime: number = 1) {
-    const startVolume = this.audioSource.volume;
+    const startVolume = this.bgmAudioSource.volume;
 
     let elapsed = 0;
 
@@ -42,13 +44,13 @@ export class SoundManager extends Component {
 
       const t = Math.min(elapsed / fadeTime, 1);
 
-      this.audioSource.volume = startVolume * (1 - t);
+      this.bgmAudioSource.volume = startVolume * (1 - t);
 
       if (t < 1) {
         requestAnimationFrame(fadeOut);
       } else {
-        this.audioSource.stop(); // 0 이 되면 정지
-        this.audioSource.volume = startVolume;
+        this.bgmAudioSource.stop(); // 0 이 되면 정지
+        this.bgmAudioSource.volume = startVolume;
       }
     };
 
@@ -56,6 +58,6 @@ export class SoundManager extends Component {
   }
 
   public playSFX() {
-    this.audioSource.playOneShot(this.sfxClips[0], 2);
+    this.sfxAudioSource.playOneShot(this.sfxClips[0], 2);
   }
 }

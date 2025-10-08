@@ -179,9 +179,28 @@ export class Player extends Component {
 
   private move(direction: Vec3, deltaTime: number) {
     // deltaTime 곱해서 프레임 독립적 이동
-    const move = direction.clone().multiplyScalar(this.speed * deltaTime);
+    const move = direction.multiplyScalar(this.speed * deltaTime);
+
+    const groundMap = GameManager.Instance.groundMap;
+    const mapWorldPos = groundMap.getWorldPosition();
+    const uiTransform = groundMap.getComponent(UITransform);
+
+    const scale = groundMap.scale;
+    const halfWidth = (uiTransform.width * scale.x) / 2;
+    const halfHeight = (uiTransform.height * scale.y) / 2;
+
+    // 맵 범위 계산
+    const minX = mapWorldPos.x - halfWidth;
+    const maxX = mapWorldPos.x + halfWidth;
+    const minY = mapWorldPos.y - halfHeight;
+    const maxY = mapWorldPos.y + halfHeight;
 
     const position = this.node.getWorldPosition().add(move);
+
+    // 플레이어가 맵 밖으로 나가지 않도록 제한
+    position.x = Math.min(Math.max(position.x, minX), maxX);
+    position.y = Math.min(Math.max(position.y, minY), maxY);
+
     this.node.setWorldPosition(position);
 
     // 좌우 이동 시 스프라이트 반전

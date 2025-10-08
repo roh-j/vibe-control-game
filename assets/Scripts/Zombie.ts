@@ -55,7 +55,7 @@ export class Zombie extends Component {
     const dist = direction.length();
 
     // 이동 방향 단위 벡터
-    const normalizedDir = direction.clone().normalize();
+    const normalizedDir = direction.normalize();
 
     // 공격 범위 체크
     if (dist <= this.attackRange) {

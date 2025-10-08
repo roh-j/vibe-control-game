@@ -13,7 +13,7 @@ const { ccclass, property } = _decorator;
 @ccclass("PlayerMovementController")
 export class PlayerMovementController extends Component {
   @property({ type: Number })
-  private deadZone: number = 50; // 입력 무시 최소 거리
+  private deadZone: number = 60; // 입력 무시 최소 거리
 
   start() {
     // 터치 이벤트 등록
@@ -45,8 +45,10 @@ export class PlayerMovementController extends Component {
       touchLocal.y - playerLocalPos.y
     );
 
+    const dist = delta.length();
+
     // DeadZone 체크
-    if (delta.length() < this.deadZone) {
+    if (dist < this.deadZone) {
       GameManager.Instance.setInputDirection(new Vec3(0, 0, 0));
       return;
     }
