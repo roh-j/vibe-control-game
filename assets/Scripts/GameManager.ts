@@ -1,4 +1,5 @@
 import { _decorator, Camera, Canvas, Component, Node, tween, Vec3 } from "cc";
+import { BulletSpawner } from "./BulletSpawner";
 import { Player } from "./Player";
 import { SoundManager } from "./SoundManager";
 import { Zombie } from "./Zombie";
@@ -18,6 +19,9 @@ export class GameManager extends Component {
 
   @property({ type: Player })
   public player: Player;
+
+  @property({ type: BulletSpawner })
+  public bulletSpawner: BulletSpawner;
 
   @property({ type: ZombieSpawner })
   public zombieSpawner: ZombieSpawner;

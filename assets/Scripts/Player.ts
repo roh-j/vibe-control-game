@@ -153,6 +153,9 @@ export class Player extends Component {
       return;
     }
 
+    // 총알 생성
+    GameManager.Instance.bulletSpawner.spawnBullet(closestZombie);
+
     // SFX 재생
     SoundManager.Instance.playSFX();
 
@@ -243,7 +246,8 @@ export class Player extends Component {
       const playerForward = new Vec3(this.node.scale.x > 0 ? 1 : -1, 0, 0);
       const playerForwardDir = playerForward.normalize();
 
-      const dist = Math.sqrt(toZombie.x ** 2 + toZombie.y ** 2);
+      // 현재 노드의 중심과 좀비 위치와의 거리
+      const dist = Vec3.distance(toZombie, Vec3.ZERO);
 
       if (dist > 200) {
         continue;

@@ -34,16 +34,13 @@ export class PlayerMovementController extends Component {
     // Canvas 기준 좌표로 변환
     const canvas = GameManager.Instance.canvas; // Canvas Node
     const uiTransform = canvas.getComponent(UITransform)!;
-    const touchLocal = uiTransform.convertToNodeSpaceAR(
+    const touchLocalPos = uiTransform.convertToNodeSpaceAR(
       new Vec3(touchPos.x, touchPos.y, 0)
     );
 
     // 플레이어 노드 기준으로 상대 좌표 계산
     const playerLocalPos = this.node.getPosition();
-    const delta = new Vec2(
-      touchLocal.x - playerLocalPos.x,
-      touchLocal.y - playerLocalPos.y
-    );
+    const delta = touchLocalPos.clone().subtract(playerLocalPos);
 
     const dist = delta.length();
 

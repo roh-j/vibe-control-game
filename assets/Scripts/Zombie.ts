@@ -48,14 +48,11 @@ export class Zombie extends Component {
     const playerPos = playerNode.getWorldPosition();
     const currentPos = this.node.getWorldPosition();
 
-    // 플레이어 방향 벡터 계산
-    const direction = playerPos.subtract(currentPos);
-
-    // 플레이어와 좀비 거리
-    const dist = direction.length();
+    // 플레이어와 좀비 거리 계산
+    const dist = Vec3.distance(playerPos, currentPos);
 
     // 이동 방향 단위 벡터
-    const normalizedDir = direction.normalize();
+    const direction = playerPos.clone().subtract(currentPos).normalize();
 
     // 공격 범위 체크
     if (dist <= this.attackRange) {
@@ -65,7 +62,7 @@ export class Zombie extends Component {
 
     // 이동 중 상태
     this.changeState(ZombieState.Walk);
-    this.move(currentPos, dist, normalizedDir, deltaTime);
+    this.move(currentPos, dist, direction, deltaTime);
   }
 
   public getState() {
@@ -150,27 +147,27 @@ export class Zombie extends Component {
   private move(
     currentPos: Vec3,
     dist: number,
-    normalizedDir: Vec3,
+    direction: Vec3,
     deltaTime: number
   ) {
     if (dist < 1 || this.state !== ZombieState.Walk) {
       return;
     }
 
-    const move = normalizedDir.multiplyScalar(this.speed * deltaTime);
+    const move = direction.multiplyScalar(this.speed * deltaTime);
 
     // deltaTime 곱해서 프레임 독립적 이동
     this.node.setWorldPosition(currentPos.add(move));
 
     // 좌우 이동 시 스프라이트 반전
-    this.updateScale(normalizedDir);
+    this.updateScale(direction);
   }
 
-  private updateScale(normalizedDir: Vec3) {
+  private updateScale(direction: Vec3) {
     const scale = this.node.getScale();
 
     this.node.setScale(
-      normalizedDir.x > 0 ? Math.abs(scale.x) : -Math.abs(scale.x),
+      direction.x > 0 ? Math.abs(scale.x) : -Math.abs(scale.x),
       scale.y,
       scale.z
     );
