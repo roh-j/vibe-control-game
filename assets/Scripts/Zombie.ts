@@ -1,5 +1,15 @@
-import { _decorator, Animation, Component, Vec3 } from "cc";
+import { Bullet } from "./Bullet";
 import { GameManager } from "./GameManager";
+import {
+  _decorator,
+  Animation,
+  BoxCollider2D,
+  Collider2D,
+  Component,
+  Contact2DType,
+  IPhysics2DContact,
+  Vec3,
+} from "cc";
 const { ccclass, property } = _decorator;
 
 export enum ZombieState {
@@ -18,10 +28,14 @@ export class Zombie extends Component {
   @property({ type: Number })
   public attackRange: number = 80;
 
+  @property({ type: Number })
+  public attackPower: number = 20;
+
   private animation: Animation;
 
   private maxHealth: number = 100;
   private health: number = 0;
+  private isHit: boolean = false;
 
   private state: ZombieState = ZombieState.Idle;
   private currentAnim: string = "";
@@ -32,6 +46,9 @@ export class Zombie extends Component {
 
     // 초기 애니메이션 설정 (대기 상태)
     this.changeState(ZombieState.Idle);
+
+    const collider = this.getComponent(BoxCollider2D);
+    collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
   }
 
   update(deltaTime: number) {
@@ -65,11 +82,46 @@ export class Zombie extends Component {
     this.move(currentPos, dist, direction, deltaTime);
   }
 
+  onBeginContact(
+    selfCollider: Collider2D,
+    otherCollider: Collider2D,
+    contact: IPhysics2DContact
+  ) {
+    const bullet = otherCollider.node.getComponent(Bullet);
+
+    if (bullet && this.isHit) {
+      console.log("Bullet hit zombie!");
+      this.handleTakeDamage();
+    }
+  }
+
   public getState() {
     return this.state;
   }
 
-  private changeState(nextState: ZombieState) {
+  public takeDamage() {
+    this.isHit = true;
+  }
+
+  public switchToIdle() {
+    this.changeState(ZombieState.Idle);
+  }
+
+  handleTakeDamage() {
+    if (this.state === ZombieState.Dead) {
+      return;
+    }
+
+    this.health -= GameManager.Instance.player.attackPower;
+
+    if (this.health <= 0) {
+      this.changeState(ZombieState.Dead);
+    } else {
+      this.changeState(ZombieState.Hurt);
+    }
+  }
+
+  changeState(nextState: ZombieState) {
     if (this.state === nextState || this.state === ZombieState.Dead) {
       return; // 사망 후엔 상태 전환 불가
     }
@@ -98,25 +150,11 @@ export class Zombie extends Component {
     }
   }
 
-  public takeDamage(amount: number = 20) {
-    if (this.state === ZombieState.Dead) {
-      return;
-    }
-
-    this.health -= amount;
-
-    if (this.health <= 0) {
-      this.changeState(ZombieState.Dead);
-    } else {
-      this.changeState(ZombieState.Hurt);
-    }
-  }
-
-  private handleAttack() {
+  handleAttack() {
     const state = this.animation.getState("zombie_1_attack");
 
     // 플레이어 공격
-    GameManager.Instance.player.takeDamage();
+    GameManager.Instance.player.takeDamage(this.attackPower);
 
     setTimeout(() => {
       if (this.state === ZombieState.Attack) {
@@ -125,7 +163,7 @@ export class Zombie extends Component {
     }, state.duration * 1000);
   }
 
-  private handleHurt() {
+  handleHurt() {
     const state = this.animation.getState("zombie_1_hurt");
 
     setTimeout(() => {
@@ -135,7 +173,7 @@ export class Zombie extends Component {
     }, state.duration * 1000);
   }
 
-  private handleDeath() {
+  handleDeath() {
     const state = this.animation.getState("zombie_1_dead");
 
     setTimeout(() => {
@@ -144,12 +182,7 @@ export class Zombie extends Component {
     }, state.duration * 1000);
   }
 
-  private move(
-    currentPos: Vec3,
-    dist: number,
-    direction: Vec3,
-    deltaTime: number
-  ) {
+  move(currentPos: Vec3, dist: number, direction: Vec3, deltaTime: number) {
     if (dist < 1 || this.state !== ZombieState.Walk) {
       return;
     }
@@ -163,7 +196,7 @@ export class Zombie extends Component {
     this.updateScale(direction);
   }
 
-  private updateScale(direction: Vec3) {
+  updateScale(direction: Vec3) {
     const scale = this.node.getScale();
 
     this.node.setScale(
@@ -173,7 +206,7 @@ export class Zombie extends Component {
     );
   }
 
-  private playAnimation(name: string) {
+  playAnimation(name: string) {
     const state = this.animation.getState(name);
 
     if (!state || (this.currentAnim === name && state.isPlaying)) {
@@ -182,9 +215,5 @@ export class Zombie extends Component {
 
     this.animation.play(name);
     this.currentAnim = name;
-  }
-
-  public switchToIdle() {
-    this.changeState(ZombieState.Idle);
   }
 }

@@ -25,6 +25,9 @@ export class Player extends Component {
   @property({ type: Number })
   public speed: number = 300;
 
+  @property({ type: Number })
+  public attackPower: number = 50;
+
   @property({ type: ProgressBar })
   public hpBar: ProgressBar;
 
@@ -71,7 +74,26 @@ export class Player extends Component {
     return this.state;
   }
 
-  private changeState(nextState: PlayerState) {
+  public takeDamage(amount: number = 20) {
+    if (this.state === PlayerState.Dead) {
+      return;
+    }
+
+    this.health -= amount;
+    this.updateHPBar();
+
+    if (this.health <= 0) {
+      this.changeState(PlayerState.Dead);
+    } else {
+      this.changeState(PlayerState.Hurt);
+    }
+  }
+
+  public attack() {
+    this.changeState(PlayerState.Attack);
+  }
+
+  changeState(nextState: PlayerState) {
     if (this.state === nextState || this.state === PlayerState.Dead) {
       return; // 사망 후엔 상태 전환 불가
     }
@@ -100,7 +122,7 @@ export class Player extends Component {
     }
   }
 
-  private updateHPBarPosition(offsetY: number = 140) {
+  updateHPBarPosition(offsetY: number = 140) {
     const playerWorldPos = this.node.getWorldPosition();
 
     this.hpBar.node.setWorldPosition(
@@ -110,28 +132,13 @@ export class Player extends Component {
     );
   }
 
-  public takeDamage(amount: number = 20) {
-    if (this.state === PlayerState.Dead) {
-      return;
-    }
-
-    this.health -= amount;
-    this.updateHPBar();
-
-    if (this.health <= 0) {
-      this.changeState(PlayerState.Dead);
-    } else {
-      this.changeState(PlayerState.Hurt);
-    }
-  }
-
-  private updateHPBar() {
+  updateHPBar() {
     if (this.hpBar) {
       this.hpBar.progress = this.health / this.maxHealth;
     }
   }
 
-  private handleHurt() {
+  handleHurt() {
     const state = this.animation.getState("player_1_hurt");
 
     setTimeout(() => {
@@ -141,11 +148,7 @@ export class Player extends Component {
     }, state.duration * 1000);
   }
 
-  public attack() {
-    this.changeState(PlayerState.Attack);
-  }
-
-  private handleAttack() {
+  handleAttack() {
     const closestZombie = this.findClosestZombie();
 
     if (!closestZombie) {
@@ -172,7 +175,7 @@ export class Player extends Component {
     }, state.duration * 1000);
   }
 
-  private handleDeath() {
+  handleDeath() {
     const state = this.animation.getState("player_1_dead");
 
     setTimeout(() => {
@@ -180,7 +183,7 @@ export class Player extends Component {
     }, state.duration * 1000);
   }
 
-  private move(direction: Vec3, deltaTime: number) {
+  move(direction: Vec3, deltaTime: number) {
     // deltaTime 곱해서 프레임 독립적 이동
     const move = direction.multiplyScalar(this.speed * deltaTime);
 
@@ -210,7 +213,7 @@ export class Player extends Component {
     this.updateScale(direction.x);
   }
 
-  private updateScale(x: number) {
+  updateScale(x: number) {
     const scale = this.node.scale;
 
     this.node.setScale(
@@ -220,7 +223,7 @@ export class Player extends Component {
     );
   }
 
-  private findClosestZombie(): Node | null {
+  findClosestZombie(): Node | null {
     const zombies = GameManager.Instance.zombieSpawner.zombies;
 
     if (!zombies || zombies.length === 0) {
@@ -267,7 +270,7 @@ export class Player extends Component {
     return closestZombie;
   }
 
-  private playAnimation(name: string) {
+  playAnimation(name: string) {
     const state = this.animation.getState(name);
 
     if (!state || (this.currentAnim === name && state.isPlaying)) {

@@ -14,7 +14,7 @@ export class PlayerAttackController extends Component {
     this.node.off(Input.EventType.TOUCH_START, this.onTouch, this);
   }
 
-  private onTouch(event: EventMouse | EventTouch) {
+  onTouch(event: EventMouse | EventTouch) {
     const player = GameManager.Instance.player;
 
     if (player) {

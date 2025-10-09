@@ -1,5 +1,4 @@
 import { _decorator, Component, instantiate, Node, Prefab, Vec3 } from "cc";
-import { GameManager } from "./GameManager";
 const { ccclass, property } = _decorator;
 
 @ccclass("ZombieSpawner")
@@ -16,7 +15,7 @@ export class ZombieSpawner extends Component {
     zombieNode.active = true;
 
     zombieNode.setWorldPosition(position);
-    GameManager.Instance.canvas.node.addChild(zombieNode);
+    this.node.addChild(zombieNode);
 
     this.zombies.push(zombieNode);
   }

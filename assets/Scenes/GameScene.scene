@@ -126,16 +126,16 @@
       "__id__": 54
     },
     "groundMap": {
-      "__id__": 10
+      "__id__": 6
     },
     "player": {
       "__id__": 30
     },
     "bulletSpawner": {
-      "__id__": 9
+      "__id__": 12
     },
     "zombieSpawner": {
-      "__id__": 7
+      "__id__": 10
     },
     "gameOverPopup": {
       "__id__": 32
@@ -171,10 +171,10 @@
         "__id__": 6
       },
       {
-        "__id__": 8
+        "__id__": 9
       },
       {
-        "__id__": 10
+        "__id__": 11
       },
       {
         "__id__": 13
@@ -230,128 +230,6 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "ZombieSpawner",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "_parent": {
-      "__id__": 5
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [
-      {
-        "__id__": 7
-      }
-    ],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_mobility": 0,
-    "_layer": 1073741824,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_id": "08e/tyrK5LuLK4ggb8chg/"
-  },
-  {
-    "__type__": "fef32LrWnZP3qZr7wRoCZwi",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 6
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "zombiePrefab": {
-      "__uuid__": "720172fc-d6c9-4616-802b-79af11051c92",
-      "__expectedType__": "cc.Prefab"
-    },
-    "_id": "3ci3t6yDlBipjj8miDQvTg"
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "BulletSpawner",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "_parent": {
-      "__id__": 5
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [
-      {
-        "__id__": 9
-      }
-    ],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_mobility": 0,
-    "_layer": 33554432,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_id": "a4eYxWYq9COJFOMULECPJq"
-  },
-  {
-    "__type__": "d69a89kQ+RLwZOZkafBLQOq",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 8
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "bulletPrefab": {
-      "__uuid__": "91325f25-d717-4b9c-881d-60a21c44bd14",
-      "__expectedType__": "cc.Prefab"
-    },
-    "_id": "97uDV6TKhE+rotUih+pEH/"
-  },
-  {
-    "__type__": "cc.Node",
     "_name": "GroundMap",
     "_objFlags": 0,
     "__editorExtras__": {},
@@ -362,10 +240,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 11
+        "__id__": 7
       },
       {
-        "__id__": 12
+        "__id__": 8
       }
     ],
     "_prefab": null,
@@ -404,7 +282,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 10
+      "__id__": 6
     },
     "_enabled": true,
     "__prefab": null,
@@ -426,7 +304,7 @@
     "_objFlags": 0,
     "__editorExtras__": {},
     "node": {
-      "__id__": 10
+      "__id__": 6
     },
     "_enabled": true,
     "__prefab": null,
@@ -458,6 +336,128 @@
     "_useGrayscale": false,
     "_atlas": null,
     "_id": "2fMQ22a69JqJiFJQeQJRXi"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "ZombieSpawner",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "_parent": {
+      "__id__": 5
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 10
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_mobility": 0,
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "08e/tyrK5LuLK4ggb8chg/"
+  },
+  {
+    "__type__": "fef32LrWnZP3qZr7wRoCZwi",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 9
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "zombiePrefab": {
+      "__uuid__": "720172fc-d6c9-4616-802b-79af11051c92",
+      "__expectedType__": "cc.Prefab"
+    },
+    "_id": "3ci3t6yDlBipjj8miDQvTg"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "BulletSpawner",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "_parent": {
+      "__id__": 5
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 12
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_mobility": 0,
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "a4eYxWYq9COJFOMULECPJq"
+  },
+  {
+    "__type__": "d69a89kQ+RLwZOZkafBLQOq",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 11
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "bulletPrefab": {
+      "__uuid__": "91325f25-d717-4b9c-881d-60a21c44bd14",
+      "__expectedType__": "cc.Prefab"
+    },
+    "_id": "97uDV6TKhE+rotUih+pEH/"
   },
   {
     "__type__": "cc.Node",
@@ -1076,6 +1076,7 @@
     "_enabled": true,
     "__prefab": null,
     "speed": 300,
+    "attackPower": 50,
     "hpBar": {
       "__id__": 19
     },

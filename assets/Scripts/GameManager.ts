@@ -1,9 +1,18 @@
-import { _decorator, Camera, Canvas, Component, Node, tween, Vec3 } from "cc";
 import { BulletSpawner } from "./BulletSpawner";
 import { Player } from "./Player";
 import { SoundManager } from "./SoundManager";
 import { Zombie } from "./Zombie";
 import { ZombieSpawner } from "./ZombieSpawner";
+import {
+  _decorator,
+  Camera,
+  Canvas,
+  Component,
+  Node,
+  PhysicsSystem2D,
+  tween,
+  Vec3,
+} from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("GameManager")
@@ -33,7 +42,7 @@ export class GameManager extends Component {
   public static Instance: GameManager;
 
   // 플레이어 방향
-  private _inputDirection: Vec3 = new Vec3();
+  private inputDirection: Vec3 = new Vec3();
   public isGameOver: boolean = false;
 
   onLoad() {
@@ -44,6 +53,7 @@ export class GameManager extends Component {
 
     // 싱글톤 초기화
     GameManager.Instance = this;
+    PhysicsSystem2D.instance.enable = true;
 
     // 게임 시작 시 지정 위치에 좀비 생성
     this.zombieSpawner.spawnMultipleZombies([
@@ -56,11 +66,11 @@ export class GameManager extends Component {
   }
 
   public getInputDirection(): Vec3 {
-    return this._inputDirection.clone();
+    return this.inputDirection.clone();
   }
 
   public setInputDirection(direction: Vec3) {
-    this._inputDirection.set(direction);
+    this.inputDirection.set(direction);
   }
 
   public gameOver() {

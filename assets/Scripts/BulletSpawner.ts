@@ -1,6 +1,5 @@
 import { _decorator, Component, instantiate, Node, Prefab } from "cc";
 import { Bullet } from "./Bullet";
-import { GameManager } from "./GameManager";
 const { ccclass, property } = _decorator;
 
 @ccclass("BulletSpawner")
@@ -15,7 +14,7 @@ export class BulletSpawner extends Component {
 
     if (!bulletNode) {
       bulletNode = instantiate(this.bulletPrefab);
-      GameManager.Instance.canvas.node.addChild(bulletNode);
+      this.node.addChild(bulletNode);
       this.bulletPool.push(bulletNode);
     }
 
