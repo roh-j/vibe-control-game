@@ -23,6 +23,7 @@ export class Bullet extends Component {
 
   update(dt: number) {
     if (!this.target || !this.target.isValid) {
+      this.returnBullet();
       return;
     }
 
