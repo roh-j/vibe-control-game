@@ -1,4 +1,4 @@
-import { _decorator, AudioClip, AudioSource, Component } from "cc";
+import { _decorator, AudioClip, AudioSource, Component, director } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("SoundManager")
@@ -21,29 +21,47 @@ export class SoundManager extends Component {
 
     // 싱글톤 설정
     SoundManager.Instance = this;
+    director.addPersistRootNode(this.node);
+
     this.bgmAudioSource = this.addComponent(AudioSource);
     this.sfxAudioSource = this.addComponent(AudioSource);
 
-    this.playBGM();
+    this.playBGM("bgm_lobby");
   }
 
-  public playBGM() {
-    this.bgmAudioSource.clip = this.bgmClips[0];
+  public playBGM(name: string) {
+    const clip = this.bgmClips.find((item) => item.name === name);
+
+    if (
+      !clip ||
+      (this.bgmAudioSource.clip === clip && this.bgmAudioSource.playing)
+    ) {
+      return;
+    }
+
+    // 기존 BGM이 재생 중이면 먼저 정지
+    if (this.bgmAudioSource.playing) {
+      this.bgmAudioSource.stop();
+    }
+
+    // 새 BGM 설정 및 재생
+    this.bgmAudioSource.clip = clip;
     this.bgmAudioSource.loop = true;
     this.bgmAudioSource.volume = 0.5;
     this.bgmAudioSource.play();
   }
 
   public stopBGM(fadeTime: number = 1) {
-    const startVolume = this.bgmAudioSource.volume;
+    if (!this.bgmAudioSource.clip) {
+      return;
+    }
 
+    const startVolume = this.bgmAudioSource.volume;
     let elapsed = 0;
 
     const fadeOut = () => {
       elapsed += 0.016;
-
       const t = Math.min(elapsed / fadeTime, 1);
-
       this.bgmAudioSource.volume = startVolume * (1 - t);
 
       if (t < 1) {
