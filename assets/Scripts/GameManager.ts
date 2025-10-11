@@ -15,6 +15,11 @@ import {
 } from "cc";
 const { ccclass, property } = _decorator;
 
+export enum MapType {
+  Desert = "DesertMap",
+  Grass = "GrassMap",
+}
+
 @ccclass("GameManager")
 export class GameManager extends Component {
   @property({ type: Canvas })
@@ -24,7 +29,7 @@ export class GameManager extends Component {
   public camera: Camera;
 
   @property({ type: Node })
-  public groundMap: Node;
+  public ground: Node;
 
   @property({ type: Player })
   public player: Player;
@@ -63,6 +68,8 @@ export class GameManager extends Component {
       new Vec3(-1000, -700, 0),
       new Vec3(200, 900, 0),
     ]);
+
+    this.switchMap(MapType.Grass);
   }
 
   public getInputDirection(): Vec3 {
@@ -71,6 +78,16 @@ export class GameManager extends Component {
 
   public setInputDirection(direction: Vec3) {
     this.inputDirection.set(direction);
+  }
+
+  public switchMap(mapType: MapType) {
+    this.ground.children.forEach((child) => (child.active = false));
+
+    const targetMap = this.ground.getChildByName(mapType);
+
+    if (targetMap) {
+      targetMap.active = true;
+    }
   }
 
   public gameOver() {

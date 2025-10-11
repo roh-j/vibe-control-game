@@ -1,4 +1,4 @@
-import { GameManager } from "./GameManager";
+import { GameManager, MapType } from "./GameManager";
 import { SoundManager } from "./SoundManager";
 import { Zombie } from "./Zombie";
 import {
@@ -188,11 +188,11 @@ export class Player extends Component {
     // deltaTime 곱해서 프레임 독립적 이동
     const move = direction.multiplyScalar(this.speed * deltaTime);
 
-    const groundMap = GameManager.Instance.groundMap;
-    const mapWorldPos = groundMap.getWorldPosition();
-    const uiTransform = groundMap.getComponent(UITransform);
+    const ground = GameManager.Instance.ground;
+    const mapWorldPos = ground.getWorldPosition();
+    const uiTransform = ground.getComponent(UITransform);
 
-    const scale = groundMap.scale;
+    const scale = ground.scale;
     const halfWidth = (uiTransform.width * scale.x) / 2;
     const halfHeight = (uiTransform.height * scale.y) / 2;
 
@@ -229,6 +229,11 @@ export class Player extends Component {
 
     if (!zombies || zombies.length === 0) {
       return null;
+    }
+
+    // 임시
+    if (GameManager.Instance.zombieSpawner.zombies.length < 3) {
+      GameManager.Instance.switchMap(MapType.Desert);
     }
 
     let closestZombie: Node | null = null;
