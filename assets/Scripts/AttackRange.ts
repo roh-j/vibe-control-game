@@ -1,4 +1,4 @@
-import { _decorator, Color, Component, Graphics } from "cc";
+import { _decorator, CCInteger, Color, Component, Graphics } from "cc";
 import { GameManager } from "./GameManager";
 import { PlayerState } from "./Player";
 const { ccclass, property } = _decorator;
@@ -8,10 +8,10 @@ export class AttackRange extends Component {
   @property({ type: Graphics })
   public graphics: Graphics;
 
-  @property({ type: Number })
+  @property({ type: CCInteger })
   public radius: number = 200;
 
-  @property({ type: Number })
+  @property({ type: CCInteger })
   public lineWidth: number = 2;
 
   @property({ type: Color })

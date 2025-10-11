@@ -4,6 +4,7 @@ import { Zombie } from "./Zombie";
 import {
   _decorator,
   Animation,
+  CCInteger,
   Component,
   Node,
   ProgressBar,
@@ -22,10 +23,10 @@ export enum PlayerState {
 
 @ccclass("Player")
 export class Player extends Component {
-  @property({ type: Number })
+  @property({ type: CCInteger })
   public speed: number = 300;
 
-  @property({ type: Number })
+  @property({ type: CCInteger })
   public attackPower: number = 50;
 
   @property({ type: ProgressBar })

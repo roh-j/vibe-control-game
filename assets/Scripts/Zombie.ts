@@ -4,6 +4,7 @@ import {
   _decorator,
   Animation,
   BoxCollider2D,
+  CCInteger,
   Collider2D,
   Component,
   Contact2DType,
@@ -22,13 +23,13 @@ export enum ZombieState {
 
 @ccclass("Zombie")
 export class Zombie extends Component {
-  @property({ type: Number })
+  @property({ type: CCInteger })
   public speed: number = 150;
 
-  @property({ type: Number })
+  @property({ type: CCInteger })
   public attackRange: number = 80;
 
-  @property({ type: Number })
+  @property({ type: CCInteger })
   public attackPower: number = 20;
 
   private animation: Animation;

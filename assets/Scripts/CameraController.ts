@@ -1,10 +1,10 @@
-import { _decorator, Component, Vec3 } from "cc";
+import { _decorator, CCInteger, Component, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
 const { ccclass, property } = _decorator;
 
 @ccclass("CameraController")
 export class CameraController extends Component {
-  @property({ type: Number })
+  @property({ type: CCInteger })
   followSpeed: number = 5;
 
   // 카메라가 이동할 목표 위치

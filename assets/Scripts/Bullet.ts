@@ -1,10 +1,17 @@
-import { _decorator, BoxCollider2D, Component, Node, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
+import {
+  _decorator,
+  BoxCollider2D,
+  CCInteger,
+  Component,
+  Node,
+  Vec3,
+} from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("Bullet")
 export class Bullet extends Component {
-  @property({ type: Number })
+  @property({ type: CCInteger })
   public speed: number = 800;
 
   private target: Node;
@@ -21,7 +28,7 @@ export class Bullet extends Component {
     this.node.active = true;
   }
 
-  update(dt: number) {
+  update(deltaTime: number) {
     if (!this.target || !this.target.isValid) {
       this.returnBullet();
       return;
@@ -34,7 +41,7 @@ export class Bullet extends Component {
     const direction = targetPos.clone().subtract(currentPos).normalize();
 
     // 이동
-    const move = direction.multiplyScalar(this.speed * dt);
+    const move = direction.multiplyScalar(this.speed * deltaTime);
 
     const angle = Math.atan2(direction.y, direction.x) * (180 / Math.PI);
     this.node.angle = angle;

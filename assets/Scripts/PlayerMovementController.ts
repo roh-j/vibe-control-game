@@ -4,15 +4,15 @@ import {
   Component,
   EventTouch,
   Input,
-  Vec2,
   UITransform,
   Vec3,
+  CCInteger,
 } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("PlayerMovementController")
 export class PlayerMovementController extends Component {
-  @property({ type: Number })
+  @property({ type: CCInteger })
   private deadZone: number = 60; // 입력 무시 최소 거리
 
   start() {
