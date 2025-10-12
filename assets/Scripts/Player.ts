@@ -1,4 +1,4 @@
-import { GameManager, MapType } from "./GameManager";
+import { GameManager } from "./GameManager";
 import { SoundManager } from "./SoundManager";
 import { Zombie } from "./Zombie";
 import {
@@ -229,11 +229,6 @@ export class Player extends Component {
 
     if (!zombies || zombies.length === 0) {
       return null;
-    }
-
-    // 임시
-    if (GameManager.Instance.zombieSpawner.zombies.length < 3) {
-      GameManager.Instance.switchMap(MapType.Desert);
     }
 
     let closestZombie: Node | null = null;

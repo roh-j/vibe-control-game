@@ -179,6 +179,8 @@ export class Zombie extends Component {
 
     setTimeout(() => {
       GameManager.Instance.zombieSpawner.removeZombie(this.node);
+      GameManager.Instance.onZombieKilled();
+
       this.node.destroy();
     }, state.duration * 1000);
   }

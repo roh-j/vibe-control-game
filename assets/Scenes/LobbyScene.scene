@@ -131,6 +131,10 @@
       {
         "__uuid__": "e7f430ab-9c80-4c86-9dac-2e2987067019",
         "__expectedType__": "cc.AudioClip"
+      },
+      {
+        "__uuid__": "8edccff3-4bdc-428d-be11-58b1a92c1fc7",
+        "__expectedType__": "cc.AudioClip"
       }
     ],
     "_id": "6fWaDpVOpKUro/7bPfqjtx"
@@ -857,8 +861,8 @@
     "_target": null,
     "_left": 0,
     "_right": 0,
-    "_top": 5.684341886080802e-14,
-    "_bottom": 5.684341886080802e-14,
+    "_top": 0,
+    "_bottom": 0,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
