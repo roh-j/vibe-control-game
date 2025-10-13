@@ -1,4 +1,4 @@
-import { _decorator, Component, UITransform, Vec3 } from "cc";
+import { _decorator, Component, Vec3 } from "cc";
 import { GameManager } from "./GameManager";
 import { SoundManager } from "./SoundManager";
 const { ccclass } = _decorator;
@@ -15,10 +15,7 @@ export class StageManager extends Component {
   public startStage(stage: number) {
     this.currentStage = stage;
 
-    const uiTransform = GameManager.Instance.canvas.getComponent(UITransform);
-    GameManager.Instance.player.node.setWorldPosition(
-      new Vec3(uiTransform.width / 2, uiTransform.height / 2, 0)
-    );
+    GameManager.Instance.player.node.setPosition(new Vec3(0, 0, 0));
     GameManager.Instance.setInputDirection(new Vec3(0, 0, 0));
 
     switch (stage) {

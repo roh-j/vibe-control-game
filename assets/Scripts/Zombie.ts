@@ -193,7 +193,7 @@ export class Zombie extends Component {
     const move = direction.multiplyScalar(this.speed * deltaTime);
 
     // deltaTime 곱해서 프레임 독립적 이동
-    this.node.setWorldPosition(currentPos.add(move));
+    this.node.setPosition(currentPos.add(move));
 
     // 좌우 이동 시 스프라이트 반전
     this.updateScale(direction);

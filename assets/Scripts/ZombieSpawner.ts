@@ -12,11 +12,9 @@ export class ZombieSpawner extends Component {
   spawnZombie(position: Vec3) {
     // 프리팹 인스턴스 생성
     const zombieNode = instantiate(this.zombiePrefab);
-    zombieNode.active = true;
+    zombieNode.setPosition(position);
 
-    zombieNode.setWorldPosition(position);
-    this.node.addChild(zombieNode);
-
+    this.node.parent.addChild(zombieNode);
     this.zombies.push(zombieNode);
   }
 

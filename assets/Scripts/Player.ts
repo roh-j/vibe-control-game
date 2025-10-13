@@ -126,7 +126,7 @@ export class Player extends Component {
   updateHPBarPosition(offsetY: number = 140) {
     const playerWorldPos = this.node.getWorldPosition();
 
-    this.hpBar.node.setWorldPosition(
+    this.hpBar.node.setPosition(
       playerWorldPos.x,
       playerWorldPos.y + offsetY,
       playerWorldPos.z
@@ -208,7 +208,7 @@ export class Player extends Component {
     position.x = Math.min(Math.max(position.x, minX), maxX);
     position.y = Math.min(Math.max(position.y, minY), maxY);
 
-    this.node.setWorldPosition(position);
+    this.node.setPosition(position);
 
     // 좌우 이동 시 스프라이트 반전
     this.updateScale(direction.x);

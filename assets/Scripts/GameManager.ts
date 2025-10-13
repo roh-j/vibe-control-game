@@ -1,19 +1,10 @@
+import { _decorator, Camera, Canvas, Component, Node, tween, Vec3 } from "cc";
 import { BulletSpawner } from "./BulletSpawner";
 import { Player } from "./Player";
 import { SoundManager } from "./SoundManager";
 import { StageManager } from "./StageManager";
 import { Zombie } from "./Zombie";
 import { ZombieSpawner } from "./ZombieSpawner";
-import {
-  _decorator,
-  Camera,
-  Canvas,
-  Component,
-  Node,
-  tween,
-  UITransform,
-  Vec3,
-} from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("GameManager")

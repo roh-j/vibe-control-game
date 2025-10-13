@@ -24,7 +24,7 @@ export class Bullet extends Component {
 
     // 플레이어 위치에서 발사
     const playerPos = GameManager.Instance.player.node.getWorldPosition();
-    this.node.setWorldPosition(playerPos);
+    this.node.setPosition(playerPos);
     this.node.active = true;
   }
 
@@ -47,7 +47,7 @@ export class Bullet extends Component {
     this.node.angle = angle;
 
     const newPos = currentPos.add(move);
-    this.node.setWorldPosition(newPos);
+    this.node.setPosition(newPos);
 
     const dist = Vec3.distance(
       this.node.getWorldPosition(),

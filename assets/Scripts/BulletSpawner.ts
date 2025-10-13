@@ -14,7 +14,8 @@ export class BulletSpawner extends Component {
 
     if (!bulletNode) {
       bulletNode = instantiate(this.bulletPrefab);
-      this.node.addChild(bulletNode);
+
+      this.node.parent.addChild(bulletNode);
       this.bulletPool.push(bulletNode);
     }
 
