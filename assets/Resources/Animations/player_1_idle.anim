@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.AnimationClip",
-    "_name": "player_idle",
+    "_name": "player_1_idle",
     "_objFlags": 0,
     "__editorExtras__": {
       "embeddedPlayerGroups": []
@@ -70,27 +70,27 @@
     ],
     "_values": [
       {
-        "__uuid__": "92741b4c-d433-47a7-9523-f38324ddba2b@f9941",
+        "__uuid__": "883ecd22-3d47-4b44-b532-e1220cefffa9@db963",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "687714aa-9f97-43bf-8098-c675c3f43109@f9941",
+        "__uuid__": "883ecd22-3d47-4b44-b532-e1220cefffa9@701a2",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "5d2c30ff-001f-4433-9c6a-b9ad38f4111a@f9941",
+        "__uuid__": "883ecd22-3d47-4b44-b532-e1220cefffa9@7df7d",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "1f86e666-1011-42fe-813d-46b69c9d3ab7@f9941",
+        "__uuid__": "883ecd22-3d47-4b44-b532-e1220cefffa9@e83be",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "923a7730-f335-4b84-b9f5-e2387e7fe6a6@f9941",
+        "__uuid__": "883ecd22-3d47-4b44-b532-e1220cefffa9@9824f",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "d47b9e88-42ef-4bf9-bfb4-181e8ef723c0@f9941",
+        "__uuid__": "883ecd22-3d47-4b44-b532-e1220cefffa9@8bca5",
         "__expectedType__": "cc.SpriteFrame"
       }
     ]
